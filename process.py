@@ -21,7 +21,7 @@ def doFile(filename):
     out, err = p.communicate()
     if b'XVID' in err:
         print("TO PROCESS [%s]", filename)
-        p = subprocess.Pipe( ['ffmpeg', '-i', filename, '-c', 'copy', '-bsf:v', 'mpeg4_unpack_bframes', '-vtag', 'FMP4', tempfile])
+        p = subprocess.Popen( ['ffmpeg', '-i', filename, '-c', 'copy', '-bsf:v', 'mpeg4_unpack_bframes', '-vtag', 'FMP4', tempfile])
         p.wait() 
         os.rename(tempfile, filename)
 
