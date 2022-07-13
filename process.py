@@ -1,6 +1,7 @@
 import pathlib
 import os
 import subprocess
+import sys
 
 # this is a help program to convert all files under "to_convert" to convert.
 # if the directory has the subdirectories those will be converte
@@ -19,7 +20,7 @@ def doFile(filename):
     p = subprocess.Popen(['ffprobe', filename],stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     p.wait()
     out, err = p.communicate()
-    if b'XVID' in err:
+    if b'XVID' in err or b'DX50' in err:
         print("TO PROCESS [%s]", filename)
         p = subprocess.Popen( ['ffmpeg', '-i', filename, '-c', 'copy', '-bsf:v', 'mpeg4_unpack_bframes', '-vtag', 'FMP4', tempfile])
         p.wait() 
@@ -37,7 +38,10 @@ def doFolder(folder):
                 #os.system( "ffmpeg -i %s -c copy -bsf:v mpeg4_unpack_bframes -vtag FMP4 %s"%(filename,tempfile))
                 #os.system( "mv %s %s"%(tempfile,filename))
 
-doFolder(directory)
+if len(sys.argv) != 2 :
+    print("Usage: python3 process.py <foldername>")
+else:
+    doFolder(sys.argv[1])
 
 print("done")
 
