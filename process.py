@@ -15,7 +15,7 @@ tempfile = 'processed.avi'
  
 # iterate over files in
 # that directory
-
+# if i get the offset errors add following flags  '-fflags' '+getnpts'
 def doFile(filename):
     p = subprocess.Popen(['ffprobe', filename],stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     p.wait()
@@ -24,6 +24,7 @@ def doFile(filename):
         print("TO PROCESS [%s]", filename)
         p = subprocess.Popen( ['ffmpeg', '-i', filename, '-c', 'copy', '-bsf:v', 'mpeg4_unpack_bframes', '-vtag', 'FMP4', tempfile])
         p.wait() 
+        os.remove(filename) # some files you have to remove first before replacing them
         os.rename(tempfile, filename)
 
 def doFolder(folder):
